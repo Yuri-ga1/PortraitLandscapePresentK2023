@@ -13,34 +13,39 @@ import com.google.android.material.navigation.NavigationBarView.OnItemSelectedLi
 
 class MainActivity : AppCompatActivity(),AdapterView.OnItemSelectedListener {
     lateinit var adapter: ArrayAdapter<CharSequence>
+    lateinit var pictures: IntArray
+    lateinit var spinner: Spinner
+    lateinit var iv: ImageView
+    var curpos: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        // TODO: заменять картинку на ту, которую установили при нажатии кнопки
-        // иначе будет исходная с котиком
 
-        //adapter = ArrayAdapter()
+        iv = findViewById(R.id.picture)
+        pictures = intArrayOf(R.drawable.car1, R.drawable.car2, R.drawable.car3)
+
         adapter = ArrayAdapter.createFromResource(this, R.array.pictures, R.layout.item)
-        val spinner = findViewById<Spinner>(R.id.pictures_list)
+        spinner = findViewById<Spinner>(R.id.spinner_pictures_list)
         spinner.adapter = adapter
         spinner.onItemSelectedListener = this
     }
 
     fun onChangePictureClick(v: View) {
-        val iv = findViewById<ImageView>(R.id.picture)
-
-        // TODO: картинку менять по очереди на следущую
-        iv.setImageResource(R.drawable.car1)
-
+        curpos = (curpos + 1) % pictures.size
+        spinner.setSelection(curpos)
+        iv.setImageResource(pictures[curpos])
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        Toast.makeText(this, "выбран элемент $position", Toast.LENGTH_SHORT ).show()
-        // TODO: заменить картинку в зависимости от выбора пользователя
+        //val iv = findViewById<ImageView>(R.id.picture)
+        iv.setImageResource(pictures[position])
+        curpos = position
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-        Toast.makeText(this, "не выбран элемент", Toast.LENGTH_SHORT ).show()
+        Toast.makeText(this, "Элемент не выбран", Toast.LENGTH_SHORT ).show()
+        //val iv = findViewById<ImageView>(R.id.picture)
+        iv.setImageResource(R.drawable.squarecat)
     }
 }
